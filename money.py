@@ -25,7 +25,8 @@ class Currency:
         """
         Should return the currency code, or code with symbol in parentheses.
         """
-        return self.code or self.code(self.symbol)
+        return f"({self.symbol}){self.code}"
+        
 
     def __eq__(self, other):
         """
@@ -49,15 +50,17 @@ class Money:
         """
         self.amount = amount
         self.currency = currency
-        pass
+        
 
     def __str__(self):
         """
         Should use the currency symbol if available, else use the code.
         Use the currency digits to determine number of digits to show.
         """
-
-        pass
+        if self.currency.symbol:
+            return f"{self.currency.symbol}{self.amount:.{self.currency.digits}f}"
+        else:
+            return f"{self.currency.code} {self.amount:.{self.currency.digits}f}" 
 
     def __repr__(self):
         return f"<Money {str(self)}>"
@@ -75,8 +78,9 @@ class Money:
         currencies, raise a DifferentCurrencyError.
         """
         if self.currency == other.currency:
-            self.amount + other.amount
+            self.amount += other.amount
         else: raise DifferentCurrencyError
+        return self
         
 
     def sub(self, other):
@@ -85,20 +89,22 @@ class Money:
         currencies, raise a DifferentCurrencyError.
         """
         if self.currency == other.currency:
-            self.amount - other.amount
+            self.amount -= other.amount
         else: raise DifferentCurrencyError
+        return self
         
 
     def mul(self, multiplier):
         """
         Multiply a money object by a number to get a new money object.
         """
-    
-         
+        self.amount *= multiplier
+        return self
 
 
     def div(self, divisor):
         """
         Divide a money object by a number to get a new money object.
         """
-        pass
+        self.amount //= divisor
+        return self
